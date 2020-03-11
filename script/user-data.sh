@@ -1,3 +1,5 @@
+#!/bin/bash
+pip install awscli
 vol=vol-04258a5f890914719
 mount_dir=/arun
 device=/dev/xvdf/
