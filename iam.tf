@@ -13,9 +13,24 @@ data "aws_iam_policy_document" "default" {
     ]
   }
 }
+data "aws_iam_policy_document" "ec2" {
+  statement {
+    sid = "1"
+    actions = [
+      "ec2:*"
+    ]
+    resources = [
+      "arn:aws:ec2:::*"
+    ]
+  }
+}
 resource "aws_iam_policy" "default" {
   name   = "terraform-ebs"
   policy = "${data.aws_iam_policy_document.default.json}"
+}
+resource "aws_iam_policy" "ec2" {
+  name   = "terraform-ebs-ec2"
+  policy = "${data.aws_iam_policy_document.ec2.json}"
 }
 resource "aws_iam_role" "default" {
   name = "terraform-ebs"
@@ -38,6 +53,10 @@ EOF
 resource "aws_iam_role_policy_attachment" "default" {
   role       = "${aws_iam_role.default.name}"
   policy_arn = "${aws_iam_policy.default.arn}"
+}
+resource "aws_iam_role_policy_attachment" "ec2" {
+  role       = "${aws_iam_role.default.name}"
+  policy_arn = "${aws_iam_policy.ec2.arn}"
 }
 resource "aws_iam_instance_profile" "default" {
   name = "terraform-ebs"
